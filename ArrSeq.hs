@@ -5,7 +5,7 @@ import qualified Arr as A
 import Par
 import Seq
 
-
+contraerSA :: (a -> a -> a) -> A.Arr a -> A.Arr a
 contraerSA f xs | even l = A.tabulate contraerSP half
                 | otherwise = A.tabulate contraerSI (half+1)
                 where
@@ -15,6 +15,7 @@ contraerSA f xs | even l = A.tabulate contraerSP half
                     contraerSI i | i == half = xs!(2*half)
                                  | otherwise = contraerSP i
 
+expandirSA :: (a -> a -> a) -> A.Arr a -> A.Arr a -> A.Arr a
 expandirSA f xs is = A.tabulate (\i -> if even i then (is!(div i 2)) else f (is!(div i 2)) (xs!(i-1))) (A.length xs)
 
 instance Seq A.Arr where
@@ -34,11 +35,11 @@ instance Seq A.Arr where
 
     appendS xs ys = joinS (fromList [xs,ys])
 
-    takeS xs c = if c >= lengthS xs then xs else A.subArray 0 (c-1) xs
+    takeS xs c = if c >= lengthS xs then xs else A.subArray 0 c xs
 
     dropS xs c | c == 0 = xs
                | c >= l = emptyS 
-               | otherwise = A.subArray c (l-1) xs
+               | otherwise = A.subArray (c) (l-c) xs
                where l = lengthS xs
 
     showtS xs | l == 0 = EMPTY
@@ -52,7 +53,7 @@ instance Seq A.Arr where
               where l = lengthS xs
 
     joinS = A.flatten
-                                  
+
     reduceS f a xs | l == 0 = a
                    | l == 1 = f a (nthS xs 0)
                    | otherwise = reduceS f a (contraerSA f xs)
