@@ -15,6 +15,8 @@ contraerSA f xs | even l = A.tabulate contraerSP half
                     contraerSI i | i == half = xs!(2*half)
                                  | otherwise = contraerSP i
 
+expandirSA f xs is = A.tabulate (\i -> if even i then (is!(div i 2)) else f (is!(div i 2)) (xs!(i-1))) (A.length xs)
+
 instance Seq A.Arr where
     emptyS = A.empty
 
@@ -57,4 +59,11 @@ instance Seq A.Arr where
                    where
                      l = lengthS xs
  
+    scanS f a xs | l == 0 = (emptyS, a)
+                 | l == 1 = (singletonS a, f a (nthS xs 0))
+                 | otherwise = let (is, r) = scanS f a (contraerSA f xs)
+                               in (expandirSA f xs is, r)
+                 where 
+                    l = lengthS xs
+
     fromList = A.fromList
