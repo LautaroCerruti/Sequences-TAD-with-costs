@@ -5,6 +5,9 @@ import qualified Arr as A
 import Par
 import Seq
 
+-- Secuencias implementadas con Arrays
+-- Cassinerio Marcos - Cerruti Lautaro
+
 contraerSA :: (a -> a -> a) -> A.Arr a -> A.Arr a
 contraerSA f xs | even l = A.tabulate contraerSP half
                 | otherwise = A.tabulate contraerSI (half+1)

@@ -3,6 +3,9 @@ module ListSeq where
 import Par
 import Seq
 
+-- Secuencias implementadas con listas
+-- Cassinerio Marcos - Cerruti Lautaro
+
 contraerSL f [] = []
 contraerSL f l@[x] = l
 contraerSL f (x:y:xs) = let (z, zs) =  f x y ||| contraerSL f xs
